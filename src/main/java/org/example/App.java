@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 class Say{
 
@@ -60,6 +61,22 @@ public class App {
         }
     }
 
+    private static void remove(int id) {
+        boolean removeOk = false;
+
+        for(Say say : sayList){
+            if(say.getNumber() == id){
+                sayList.remove(say);
+                System.out.println(id + "번 명언이 삭제되었습니다.");
+                removeOk = true;
+            }
+        }
+
+        if(!removeOk){
+            System.out.println(id + "번 명언은 존재하지 않습니다.");
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         System.out.println("== 명언 앱 ==");
 
@@ -67,17 +84,30 @@ public class App {
 
         while (exit){
             System.out.print("명령) ");
-            String s = br.readLine();
+            StringTokenizer st = new StringTokenizer(br.readLine(), "?");
 
-            switch (s) {
-                case "종료" -> {
-                    exit = false;
+            if(st.countTokens() == 1){
+                switch (st.nextToken()) {
+                    case "종료" -> {
+                        exit = false;
+                    }
+                    case "등록" -> {
+                        add();
+                    }
+                    case "목록" ->{
+                        list();
+                    }
                 }
-                case "등록" -> {
-                    add();
-                }
-                case "목록" ->{
-                    list();
+            }
+            else{
+                switch (st.nextToken()){
+                    case "삭제" -> {
+                        String s = st.nextToken();
+                        if(s.startsWith("id=")){
+                            int id = Integer.parseInt(s.substring(3));
+                            remove(id);
+                        }
+                    }
                 }
             }
         }
