@@ -10,8 +10,8 @@ import java.util.StringTokenizer;
 class Say{
 
     private final int number;
-    private final String text;
-    private final String writer;
+    private String text;
+    private String writer;
 
     public Say(String text, String writer, int number) {
         this.text = text;
@@ -29,6 +29,14 @@ class Say{
 
     public int getNumber() {
         return number;
+    }
+
+    public void setText(String text){
+        this.text = text;
+    }
+
+    public void setWriter(String writer){
+        this.writer = writer;
     }
 }
 
@@ -77,6 +85,28 @@ public class App {
         }
     }
 
+    private static void update(int id) throws IOException {
+        boolean isUpdate = false;
+
+        for(Say say : sayList){
+            if(say.getNumber() == id){
+                System.out.println("명언(기존) : " + say.getText());
+                System.out.print("명언 : ");
+                say.setText(br.readLine());
+
+                System.out.println("작가(기존) : " + say.getWriter());
+                System.out.print("작가 : ");
+                say.setWriter(br.readLine());
+                isUpdate = true;
+                break;
+            }
+        }
+
+        if(!isUpdate){
+            System.out.println(id + "번 명언은 존재하지 않습니다.");
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         System.out.println("== 명언 앱 ==");
 
@@ -106,6 +136,13 @@ public class App {
                         if(s.startsWith("id=")){
                             int id = Integer.parseInt(s.substring(3));
                             remove(id);
+                        }
+                    }
+                    case "수정" -> {
+                        String s = st.nextToken();
+                        if(s.startsWith("id=")){
+                            int id = Integer.parseInt(s.substring(3));
+                            update(id);
                         }
                     }
                 }
