@@ -110,7 +110,7 @@ public class App {
 
     private static void loadAllSaying() throws IOException {
         File folder = new File(FOLDER);
-        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.equals("data.json"));
 
         if(files != null){
             for(File file : files){
@@ -141,7 +141,9 @@ public class App {
     private static void list(){
         System.out.println("번호 / 작가 / 명언");
         System.out.println("-----------------");
-        for (Say say : sayList) {
+
+        for (int i=sayList.size()-1; i>=0; i--) {
+            Say say = sayList.get(i);
             System.out.println(say.getNumber() + " / " +
                     say.getWriter() + " / " +
                     say.getText()
@@ -193,6 +195,29 @@ public class App {
         }
     }
 
+    private static void build() throws IOException {
+        String path = FOLDER + "data.json";
+
+        int cnt = 0;
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))){
+            bw.write("[\n");
+            for(Say say : sayList){
+                cnt++;
+                bw.write("  {\n");
+                bw.write("      \"id\": " + say.getNumber() + ",\n");
+                bw.write("      \"content\": \"" + say.getText() + "\",\n");
+                bw.write("      \"author\": \"" + say.getWriter() + "\"\n");
+                if(cnt == sayList.size())
+                    bw.write("  }\n");
+                else
+                    bw.write("  },\n");
+            }
+            bw.write("]");
+        }
+
+        System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+    }
+
     public static void main(String[] args) throws IOException {
         initialize();
         cnt = getLastId() + 1;
@@ -211,6 +236,7 @@ public class App {
                     case "종료" -> exit = false;
                     case "등록" -> add();
                     case "목록" -> list();
+                    case "빌드" -> build();
                     default -> System.out.println("명령이 잘못되었습니다.");
                 }
             }
