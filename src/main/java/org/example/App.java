@@ -1,8 +1,8 @@
 package org.example;
 
-import org.example.Controller.WiseSayingController;
-import org.example.Repository.WiseSayingRepository;
-import org.example.Service.WiseSayingService;
+import org.example.controller.WiseSayingController;
+import org.example.repository.WiseSayingRepository;
+import org.example.service.WiseSayingService;
 
 public class App {
 

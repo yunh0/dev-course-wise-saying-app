@@ -1,6 +1,6 @@
-package org.example.Service;
+package org.example.service;
 
-import org.example.Repository.WiseSayingRepository;
+import org.example.repository.WiseSayingRepository;
 import org.example.dto.Say;
 
 import java.io.IOException;

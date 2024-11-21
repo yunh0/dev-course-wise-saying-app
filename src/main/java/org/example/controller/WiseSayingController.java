@@ -1,6 +1,6 @@
-package org.example.Controller;
+package org.example.controller;
 
-import org.example.Service.WiseSayingService;
+import org.example.service.WiseSayingService;
 import org.example.dto.Say;
 
 import java.io.BufferedReader;
