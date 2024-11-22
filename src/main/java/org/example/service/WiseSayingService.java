@@ -4,23 +4,18 @@ import org.example.repository.WiseSayingRepository;
 import org.example.dto.Say;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class WiseSayingService {
 
     private final WiseSayingRepository wiseSayingRepository;
-    private final List<Say> sayList = new ArrayList<>();
-    private int currentId;
 
-    public WiseSayingService(WiseSayingRepository wiseSayingRepository) throws IOException {
+    public WiseSayingService(WiseSayingRepository wiseSayingRepository) {
         this.wiseSayingRepository = wiseSayingRepository;
-        this.currentId = wiseSayingRepository.getLastId() + 1;
-        this.sayList.addAll(wiseSayingRepository.loadAllSaying());
     }
 
     public Say getSayById(int id){
-        for(Say say : sayList){
+        for(Say say : wiseSayingRepository.loadAllSaying()){
             if(say.getNumber() == id){
                 return say;
             }
@@ -29,19 +24,17 @@ public class WiseSayingService {
     }
 
     public List<Say> getList(){
-        return new ArrayList<>(sayList);
+        return wiseSayingRepository.loadAllSaying();
     }
 
     public int add(String text, String writer) throws IOException {
-        Say say = new Say(text, writer, currentId);
-        int id = currentId;
+        int id = wiseSayingRepository.getLastId();
 
-        sayList.add(say);
+        Say say = new Say(text, writer, id+1);
         wiseSayingRepository.saveSaying(say);
-        wiseSayingRepository.saveLastId(currentId);
-        currentId++;
+        wiseSayingRepository.saveLastId(id+1);
 
-        return id;
+        return id+1;
     }
 
     public void update(int id, String text, String writer) throws IOException {
@@ -52,12 +45,10 @@ public class WiseSayingService {
     }
 
     public void delete(int id) {
-        Say say = getSayById(id);
-        sayList.remove(say);
         wiseSayingRepository.deleteSaying(id);
     }
 
     public void build() throws IOException {
-        wiseSayingRepository.build(sayList);
+        wiseSayingRepository.build();
     }
 }

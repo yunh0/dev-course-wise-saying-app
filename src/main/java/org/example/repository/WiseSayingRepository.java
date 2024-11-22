@@ -96,7 +96,8 @@ public class WiseSayingRepository {
         new File(path).delete();
     }
 
-    public void build(List<Say> sayList) throws IOException {
+    public void build() throws IOException {
+        List<Say> sayList = loadAllSaying();
         String path = FOLDER + "data.json";
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))){
