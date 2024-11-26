@@ -8,10 +8,12 @@ import java.util.List;
 
 public class WiseSayingRepository {
 
-    private final String FOLDER = "db/wiseSaying/";
-    private final String LAST_ID_FILE = FOLDER + "lastId.txt";
+    private final String FOLDER;
+    private final String LAST_ID_FILE;
 
-    public WiseSayingRepository() throws IOException{
+    public WiseSayingRepository(String FOLDER) throws IOException{
+        this.FOLDER = FOLDER;
+        LAST_ID_FILE = FOLDER + "lastId.txt";
         initialize();
     }
 

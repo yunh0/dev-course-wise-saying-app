@@ -5,16 +5,16 @@ import org.example.dto.Say;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 public class WiseSayingController {
 
     private final WiseSayingService wiseSayingService;
-    private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private final BufferedReader br;
 
-    public WiseSayingController(WiseSayingService wiseSayingService) {
+    public WiseSayingController(WiseSayingService wiseSayingService, BufferedReader br) {
         this.wiseSayingService = wiseSayingService;
+        this.br = br;
     }
 
     private void add() throws IOException {
