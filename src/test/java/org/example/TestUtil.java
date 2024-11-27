@@ -4,7 +4,7 @@ import java.io.*;
 
 public class TestUtil {
 
-    public static BufferedReader genBufferedReader(final String input) {
+    public static BufferedReader getBufferedReader(final String input) {
         final InputStream in = new ByteArrayInputStream(input.getBytes());
         return new BufferedReader(new InputStreamReader(in));
     }
