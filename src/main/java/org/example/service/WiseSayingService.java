@@ -4,6 +4,7 @@ import org.example.repository.WiseSayingRepository;
 import org.example.dto.Say;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WiseSayingService {
@@ -50,5 +51,20 @@ public class WiseSayingService {
 
     public void build() throws IOException {
         wiseSayingRepository.build();
+    }
+
+    public List<Say> search(String keywordType, String keyword){
+        List<Say> searchSayList = new ArrayList<>();
+
+        for(Say say : wiseSayingRepository.loadAllSaying()){
+            if ("content".equals(keywordType) && say.getText().contains(keyword)) {
+                searchSayList.add(say);
+            }
+            else if ("author".equals(keywordType) && say.getWriter().contains(keyword)) {
+                searchSayList.add(say);
+            }
+        }
+
+        return searchSayList;
     }
 }
