@@ -40,3 +40,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Ignore db folder in src/main/java
+src/main/java/org/example/db/
+
+# Ignore db folder in src/test/java
+src/test/java/org/example/db/

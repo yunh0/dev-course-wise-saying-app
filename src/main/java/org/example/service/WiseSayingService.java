@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.dto.PageResult;
 import org.example.repository.WiseSayingRepository;
 import org.example.dto.Say;
 
@@ -28,6 +29,21 @@ public class WiseSayingService {
         return wiseSayingRepository.loadAllSaying();
     }
 
+    public PageResult getPaginatedList(int page, int pageSize, List<Say> sayList) {
+        int totalSayings = sayList.size();
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, totalSayings);
+        int totalPage = (totalSayings / pageSize) +  ((totalSayings % pageSize > 0) ? 1 : 0);
+
+        if(page > totalPage){
+            throw new IllegalArgumentException("검색 결과가 없습니다.");
+        }
+
+        List<Say> paginatedList = sayList.subList(startIndex, endIndex);
+
+        return new PageResult(page, totalPage ,paginatedList);
+    }
+
     public int add(String text, String writer) throws IOException {
         int id = wiseSayingRepository.getLastId();
 
@@ -53,7 +69,7 @@ public class WiseSayingService {
         wiseSayingRepository.build();
     }
 
-    public List<Say> search(String keywordType, String keyword){
+    public PageResult search(String keywordType, String keyword, int page, int pageSize){
         List<Say> searchSayList = new ArrayList<>();
 
         for(Say say : wiseSayingRepository.loadAllSaying()){
@@ -65,6 +81,6 @@ public class WiseSayingService {
             }
         }
 
-        return searchSayList;
+        return getPaginatedList(page, pageSize, searchSayList);
     }
 }

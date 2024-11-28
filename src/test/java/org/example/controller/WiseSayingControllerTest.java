@@ -28,7 +28,7 @@ public class WiseSayingControllerTest {
                 """
         );
 
-        String result = AppTest.run(br);
+        String result = AppTest.run(br, false);
         System.out.println(result);
 
         assertThat(result).contains("1번 명언이 등록되었습니다.");
@@ -44,7 +44,7 @@ public class WiseSayingControllerTest {
                 종료
                 """
         );
-        AppTest.run(br1);
+        AppTest.run(br1, false);
 
         BufferedReader br2 = TestUtil.getBufferedReader("""
                 목록
@@ -52,7 +52,7 @@ public class WiseSayingControllerTest {
                 """
         );
 
-        String result = AppTest.run(br2);
+        String result = AppTest.run(br2, false);
         System.out.println(result);
 
         assertThat(result)
@@ -70,14 +70,14 @@ public class WiseSayingControllerTest {
                 종료
                 """
         );
-        AppTest.run(br1);
+        AppTest.run(br1, false);
 
         BufferedReader br2 = TestUtil.getBufferedReader("""
                 삭제?id=1
                 종료
                 """
         );
-        String result = AppTest.run(br2);
+        String result = AppTest.run(br2, false);
         System.out.println(result);
         assertThat(result).contains("1번 명언이 삭제되었습니다.");
     }
@@ -92,7 +92,7 @@ public class WiseSayingControllerTest {
                 종료
                 """
         );
-        AppTest.run(br1);
+        AppTest.run(br1, false);
 
         BufferedReader br2 = TestUtil.getBufferedReader("""
                 수정?id=1
@@ -101,7 +101,7 @@ public class WiseSayingControllerTest {
                 종료
                 """
         );
-        String result = AppTest.run(br2);
+        String result = AppTest.run(br2, false);
         System.out.println(result);
 
         assertThat(result)
@@ -126,14 +126,14 @@ public class WiseSayingControllerTest {
                 종료
                 """
         );
-        AppTest.run(br1);
+        AppTest.run(br1, false);
 
         BufferedReader br2 = TestUtil.getBufferedReader("""
                 목록?keywordType=content&keyword=과거
                 종료
                 """
         );
-        String result = AppTest.run(br2);
+        String result = AppTest.run(br2, false);
         System.out.println(result);
 
         assertThat(result)
@@ -161,14 +161,14 @@ public class WiseSayingControllerTest {
                 종료
                 """
         );
-        AppTest.run(br1);
+        AppTest.run(br1, false);
 
         BufferedReader br2 = TestUtil.getBufferedReader("""
                 목록?keywordType=author&keyword=작자
                 종료
                 """
         );
-        String result = AppTest.run(br2);
+        String result = AppTest.run(br2, false);
         System.out.println(result);
 
         assertThat(result)
@@ -179,4 +179,133 @@ public class WiseSayingControllerTest {
                 .contains("1 / 작자미상 / 과거에 집착하지마라");
 
     }
+
+    @Test
+    @DisplayName("페이징(기본 목록 출력, 페이지 값 제공 X) - 정상작동")
+    void shouldWiseSayingListWithoutPageParameterTest(){
+        BufferedReader br1 = TestUtil.getBufferedReader("""
+                목록
+                종료
+                """
+        );
+        String result = AppTest.run(br1, true);
+
+        System.out.println(result);
+
+        assertThat(result)
+                .contains("번호 / 작가 / 명언")
+                .contains("10 / 작자미상 10 / 명언 10")
+                .contains("6 / 작자미상 6 / 명언 6")
+                .contains("[페이지 1 / 2]")
+                .doesNotContain("5 / 작자미상 5 / 명언 5");
+    }
+
+    @Test
+    @DisplayName("페이징(기본 목록 출력, 페이지 값 제공 O) - 정상작동")
+    void shouldListWiseSayingsWithPageParameterTest(){
+        BufferedReader br1 = TestUtil.getBufferedReader("""
+                목록?page=2
+                종료
+                """
+        );
+        String result = AppTest.run(br1, true);
+
+        System.out.println(result);
+
+        assertThat(result)
+                .contains("번호 / 작가 / 명언")
+                .contains("5 / 작자미상 5 / 명언 5")
+                .contains("1 / 작자미상 1 / 명언 1")
+                .contains("[페이지 2 / 2]")
+                .doesNotContain("7 / 작자미상 7 / 명언 7");
+    }
+
+    @Test
+    @DisplayName("페이징(author로 검색한 목록 출력, 페이지 값 제공 X) - 정상작동")
+    void shouldSearchWiseSayingsByAuthorWithoutPageParameterTest(){
+        BufferedReader br1 = TestUtil.getBufferedReader("""
+                목록?keywordType=author&keyword=작자
+                종료
+                """
+        );
+        String result = AppTest.run(br1, true);
+
+        System.out.println(result);
+
+        assertThat(result)
+                .contains("검색타입 : author")
+                .contains("검색어 : 작자")
+                .contains("번호 / 작가 / 명언")
+                .contains("10 / 작자미상 10 / 명언 10")
+                .contains("6 / 작자미상 6 / 명언 6")
+                .contains("[페이지 1 / 2]")
+                .doesNotContain("5 / 작자미상 5 / 명언 5");
+    }
+
+    @Test
+    @DisplayName("페이징(content로 검색한 목록 출력, 페이지 값 제공 X) - 정상작동")
+    void shouldSearchWiseSayingsByContentWithoutPageParameterTest(){
+        BufferedReader br1 = TestUtil.getBufferedReader("""
+                목록?keywordType=content&keyword=명언
+                종료
+                """
+        );
+        String result = AppTest.run(br1, true);
+
+        System.out.println(result);
+
+        assertThat(result)
+                .contains("검색타입 : content")
+                .contains("검색어 : 명언")
+                .contains("번호 / 작가 / 명언")
+                .contains("10 / 작자미상 10 / 명언 10")
+                .contains("6 / 작자미상 6 / 명언 6")
+                .contains("[페이지 1 / 2]")
+                .doesNotContain("5 / 작자미상 5 / 명언 5");
+    }
+
+    @Test
+    @DisplayName("페이징(author로 검색한 목록 출력, 페이지 값 제공 O) - 정상작동")
+    void shouldSearchWiseSayingsByAuthorWithPageParameterTest(){
+        BufferedReader br1 = TestUtil.getBufferedReader("""
+                목록?page=2?keywordType=author&keyword=작자
+                종료
+                """
+        );
+        String result = AppTest.run(br1, true);
+
+        System.out.println(result);
+
+        assertThat(result)
+                .contains("검색타입 : author")
+                .contains("검색어 : 작자")
+                .contains("번호 / 작가 / 명언")
+                .contains("5 / 작자미상 5 / 명언 5")
+                .contains("1 / 작자미상 1 / 명언 1")
+                .contains("[페이지 2 / 2]")
+                .doesNotContain("6 / 작자미상 6 / 명언 6");
+    }
+
+    @Test
+    @DisplayName("페이징(content로 검색한 목록 출력, 페이지 값 제공 O) - 정상작동")
+    void shouldSearchWiseSayingsByContentWithPageParameterTest(){
+        BufferedReader br1 = TestUtil.getBufferedReader("""
+                목록?page=2?keywordType=content&keyword=명언
+                종료
+                """
+        );
+        String result = AppTest.run(br1, true);
+
+        System.out.println(result);
+
+        assertThat(result)
+                .contains("검색타입 : content")
+                .contains("검색어 : 명언")
+                .contains("번호 / 작가 / 명언")
+                .contains("5 / 작자미상 5 / 명언 5")
+                .contains("1 / 작자미상 1 / 명언 1")
+                .contains("[페이지 2 / 2]")
+                .doesNotContain("6 / 작자미상 6 / 명언 6");
+    }
+
 }

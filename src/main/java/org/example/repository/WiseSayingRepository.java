@@ -31,6 +31,15 @@ public class WiseSayingRepository {
         }
     }
 
+    public void createSampleData() throws IOException {
+        for (int i = 1; i <= 10; i++) {
+            String text = "명언 " + i;
+            String writer = "작자미상 " + i;
+            Say say = new Say(text, writer, i);
+            saveSaying(say);
+        }
+    }
+
     public int getLastId() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(LAST_ID_FILE))){
             return Integer.parseInt(reader.readLine().trim());
@@ -79,6 +88,7 @@ public class WiseSayingRepository {
                 }
             }
         }
+        sayList.sort((s1, s2) -> s2.getNumber() - s1.getNumber());
         return sayList;
     }
 
